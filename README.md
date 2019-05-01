@@ -92,4 +92,5 @@ python detect.py --scales 1,3
 
 
 "We need to have yolov3.weights file before run this code." 
+<br>
 "origin_source code link - https://github.com/ayooshkathuria/pytorch-yolo-v3"
