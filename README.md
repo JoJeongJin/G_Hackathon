@@ -91,4 +91,5 @@ python detect.py --scales 1,3
 ```
 
 
-"# G_Hackathon ½ÃÀÛÇÏ±â Àü¿¡ yolov3.weights ÆÄÀÏÀ» ´Ù¿î¹Þ¾Æ¾ß ÇÕ´Ï´Ù." 
+"# G_Hackathon ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ yolov3.weights ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½Þ¾Æ¾ï¿½ ï¿½Õ´Ï´ï¿½." 
+"source - https://github.com/ayooshkathuria/pytorch-yolo-v3"
