@@ -91,5 +91,5 @@ python detect.py --scales 1,3
 ```
 
 
-"# G_Hackathon �����ϱ� ���� yolov3.weights ������ �ٿ�޾ƾ� �մϴ�." 
-"source - https://github.com/ayooshkathuria/pytorch-yolo-v3"
+"We need to have yolov3.weights file before run this code." 
+"origin_source code link - https://github.com/ayooshkathuria/pytorch-yolo-v3"
