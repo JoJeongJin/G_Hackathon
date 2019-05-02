@@ -13,6 +13,7 @@ import random
 import argparse
 import pickle as pkl
 
+
 def get_test_input(input_dim, CUDA):
     img = cv2.imread("imgs/messi.jpg")
     img = cv2.resize(img, (input_dim, input_dim)) 
@@ -25,6 +26,7 @@ def get_test_input(input_dim, CUDA):
         img_ = img_.cuda()
     
     return img_
+
 
 def prep_image(img, inp_dim):
     """
@@ -40,6 +42,7 @@ def prep_image(img, inp_dim):
     img_ = torch.from_numpy(img_).float().div(255.0).unsqueeze(0)
     return img_, orig_im, dim
 
+
 def write(x, img):
     c1 = tuple(x[1:3].int())
     c2 = tuple(x[3:5].int())
@@ -53,13 +56,13 @@ def write(x, img):
     cv2.putText(img, label, (c1[0], c1[1] + t_size[1] + 4), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1);
     return img
 
+
 def arg_parse():
     """
     Parse arguements to the detect module
     
     """
-    
-    
+
     parser = argparse.ArgumentParser(description='YOLO v3 Cam Demo')
     parser.add_argument("--confidence", dest = "confidence", help = "Object Confidence to filter predictions", default = 0.25)
     parser.add_argument("--nms_thresh", dest = "nms_thresh", help = "NMS Threshhold", default = 0.4)
@@ -68,10 +71,12 @@ def arg_parse():
                         default = "160", type = str)
     return parser.parse_args()
 
+
 def write_label(x, img):
     cls = int(x[-1])
     label = "{0}".format(classes[cls])
     return label
+
 
 if __name__ == '__main__':
     cfgfile = "cfg/yolov3.cfg"
@@ -83,9 +88,6 @@ if __name__ == '__main__':
     nms_thesh = float(args.nms_thresh)
     start = 0
     CUDA = torch.cuda.is_available()
-    
-
-    
     
     num_classes = 80
     bbox_attrs = 5 + num_classes
@@ -119,17 +121,13 @@ if __name__ == '__main__':
         
         ret, frame = cap.read()
         if ret:
-            
             img, orig_im, dim = prep_image(frame, inp_dim)
-            
             im_dim = torch.FloatTensor(dim).repeat(1,2)
-            
             
             if CUDA:
                 im_dim = im_dim.cuda()
                 img = img.cuda()
-            
-            
+
             output = model(Variable(img), CUDA)
             output = write_results(output, confidence, num_classes, nms = True, nms_conf = nms_thesh)
 
@@ -141,9 +139,7 @@ if __name__ == '__main__':
                 if key & 0xFF == ord('q'):
                     break
                 continue
-            
 
-        
             output[:,1:5] = torch.clamp(output[:,1:5], 0.0, float(inp_dim))/inp_dim
             
 #           im_dim = im_dim.repeat(output.size(0), 1)
@@ -157,7 +153,7 @@ if __name__ == '__main__':
 
             camera_detect_list = list( map(lambda x: write_label(x, orig_im), output) )
 
-            if 'person' in camera_detect_list:
+            if 'person' in camera_detect_list: #이 부분에서 person이 detect되면 print 해준다.
                 print('Person detected')
 
             cv2.imshow("frame", orig_im)
@@ -166,7 +162,6 @@ if __name__ == '__main__':
                 break
             frames += 1
             # print("FPS of the video is {:5.2f}".format( frames / (time.time() - start)))
-
             
         else:
             break
