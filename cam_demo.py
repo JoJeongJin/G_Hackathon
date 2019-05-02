@@ -113,6 +113,9 @@ if __name__ == '__main__':
     frames = 0
     start = time.time()    
     while cap.isOpened():
+
+        # time.sleep(0.5)
+        #이걸로 몇초마다 받을 지 설정 가능
         
         ret, frame = cap.read()
         if ret:
@@ -151,14 +154,18 @@ if __name__ == '__main__':
             colors = pkl.load(open("pallete", "rb"))
 
             list( map(lambda x: write(x, orig_im), output) )
-            print(list( map(lambda x: write_label(x, orig_im), output) ))
+
+            camera_detect_list = list( map(lambda x: write_label(x, orig_im), output) )
+
+            if 'person' in camera_detect_list:
+                print('Person detected')
 
             cv2.imshow("frame", orig_im)
             key = cv2.waitKey(1)
             if key & 0xFF == ord('q'):
                 break
             frames += 1
-            print("FPS of the video is {:5.2f}".format( frames / (time.time() - start)))
+            # print("FPS of the video is {:5.2f}".format( frames / (time.time() - start)))
 
             
         else:
