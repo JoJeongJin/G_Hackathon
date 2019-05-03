@@ -119,8 +119,8 @@ if __name__ == '__main__':
 
     videofile = 'video.avi'
 
-    cap = cv2.VideoCapture(0) #카메라1 (사람 detect하는 부분)
-    cap2 = cv2.VideoCapture(1) #카메라2 (색깔 detect하는 부분)
+    cap = cv2.VideoCapture(1) #카메라1 (사람 detect하는 부분)
+    cap2 = cv2.VideoCapture(0) #카메라2 (색깔 detect하는 부분)
 
     assert cap.isOpened(), 'Cannot capture source'
 
@@ -229,14 +229,14 @@ if __name__ == '__main__':
 
             if red_pixel_num >= thresh_hold and red_pixel_num > green_pixel_num:
                 light_status = "red"
-                print("빨간불이 켜졌습니다.")
+                print("Red")
 
             # print("초록 픽셀의 갯수 => ")
             # print(green_pixel_num)
 
             if green_pixel_num >= thresh_hold and green_pixel_num>red_pixel_num:
                 light_status = "green"
-                print("초록불이 켜졌습니다.")
+                print("Green")
 
             now = datetime.now()
             ##여기에 각종 연산을 통한 결과를 출력하자
@@ -253,12 +253,12 @@ if __name__ == '__main__':
                 pygame.mixer.init(freq, bitsize, channels, buffer)
                 pygame.mixer.music.load(music_file)
                 pygame.mixer.music.play()
-                print("빨간불에는 건너면 안됩니다.")
+                print("Don't across")
 
             #case 2: 초록불이 켜졌을 때 밤인 경우 불을 켜줘야 한다.
             now_hour = now.hour
             if green_pixel_num == thresh_hold and (now_hour >=17 or now_hour <=7) and light_status == "green":
-                print("초록불이 켜지고 밤이니까 불이 켜집니다.")
+                print("Light on")
             ##이 사이에 출력하자.
 
             cv2.imshow('original', frame2)
