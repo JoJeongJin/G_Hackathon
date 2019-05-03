@@ -52,12 +52,16 @@ def write(x, img):
     label = "{0}".format(classes[cls])
     color = random.choice(colors)
     cv2.rectangle(img, c1, c2, color, 1)
+    print_1 = str(x[1].int())[7:8]
+    print_2 = str(x[3].int())[7:8]
     t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1, 1)[0]
     c2 = c1[0] + t_size[0] + 3, c1[1] + t_size[1] + 4
     cv2.rectangle(img, c1, c2, color, -1)
-    cv2.putText(img, label, (c1[0], c1[1] + t_size[1] + 4), cv2.FONT_HERSHEY_PLAIN, 1, [225, 255, 255], 1);
-    return img
 
+    #만약 0,0이 뜨지 않는 다면 밑에 것을 실행 해줘라
+    if print_1 != "0" and print_2 != "0":
+        cv2.putText(img, label, (c1[0], c1[1] + t_size[1] + 4), cv2.FONT_HERSHEY_PLAIN, 1, [225, 255, 255], 1);
+    return img
 
 def arg_parse():
     """
@@ -75,9 +79,14 @@ def arg_parse():
 
 
 def write_label(x, img):
+    print_1 = str(x[1].int())[7:8]
+    print_2 = str(x[3].int())[7:8]
     cls = int(x[-1])
     label = "{0}".format(classes[cls])
-    return label
+    if print_1 != "0" and print_2 != "0":
+        return label
+    else:
+        return "NONE"
 
 
 if __name__ == '__main__':
@@ -214,8 +223,8 @@ if __name__ == '__main__':
                 if green_pixel_num >= thresh_hold:
                     break
 
-            print("초록 픽셀의 갯수 => ")
-            print(green_pixel_num)
+            # print("초록 픽셀의 갯수 => ")
+            # print(green_pixel_num)
 
             if green_pixel_num >= thresh_hold:
                 print("초록불이 켜졌습니다.")
@@ -235,6 +244,7 @@ if __name__ == '__main__':
                 pygame.mixer.init(freq, bitsize, channels, buffer)
                 pygame.mixer.music.load(music_file)
                 pygame.mixer.music.play()
+                print("빨간불에는 건너면 안됩니다.")
 
             #case 2: 초록불이 켜졌을 때 밤인 경우 불을 켜줘야 한다.
             now_hour = now.hour
