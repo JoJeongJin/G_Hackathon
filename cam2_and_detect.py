@@ -12,6 +12,8 @@ import pandas as pd
 import random
 import argparse
 import pickle as pkl
+from datetime import datetime
+import pygame
 
 
 def get_test_input(input_dim, CUDA):
@@ -157,8 +159,10 @@ if __name__ == '__main__':
 
             camera_detect_list = list(map(lambda x: write_label(x, orig_im), output))
 
+            person_detected_int = 0
             if 'person' in camera_detect_list:  # 이 부분에서 person이 detect되면 print 해준다.
                 print('Person detected')
+                person_detected_int = 1
 
             cv2.imshow("frame", orig_im)
 
@@ -188,18 +192,17 @@ if __name__ == '__main__':
             # blue_pixel_num = 0
             green_pixel_num = 0
             red_pixel_num = 0
-
             thresh_hold = 100
 
             res3_array = np.ravel(res3, order='C')
             for i in res3_array:
-                if i>=1:
+                if i >= 1:
                     red_pixel_num=red_pixel_num+1
-                if red_pixel_num >=thresh_hold:
+                if red_pixel_num >= thresh_hold:
                     break
 
-            print("빨간 픽셀의 갯수 => ")
-            print(red_pixel_num)
+            # print("빨간 픽셀의 갯수 => ")
+            # print(red_pixel_num)
 
             if red_pixel_num >= thresh_hold:
                 print("빨간불이 켜졌습니다.")
@@ -216,6 +219,28 @@ if __name__ == '__main__':
 
             if green_pixel_num >= thresh_hold:
                 print("초록불이 켜졌습니다.")
+
+            now = datetime.now()
+            ##여기에 각종 연산을 통한 결과를 출력하자
+
+            #case 1: 사람이 빨간불인데 건너려고 하는 경우 경고 소리를 내준다.
+            if person_detected_int == 1 and red_pixel_num == thresh_hold:
+                music_file = "alert.mp3"
+                freq = 16000  # sampling rate, 44100(CD), 16000(Naver TTS), 24000(google TTS)
+                bitsize = -16  # signed 16 bit. support 8,-8,16,-16
+                channels = 1  # 1 is mono, 2 is stereo
+                buffer = 2048  # number of samples (experiment to get right sound)
+
+                # default : pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
+                pygame.mixer.init(freq, bitsize, channels, buffer)
+                pygame.mixer.music.load(music_file)
+                pygame.mixer.music.play()
+
+            #case 2: 초록불이 켜졌을 때 밤인 경우 불을 켜줘야 한다.
+            now_hour = now.hour
+            if green_pixel_num == thresh_hold and (now_hour >=17 or now_hour <=7):
+                print("초록불이 켜지고 밤이니까 불을 켜자")
+            ##이 사이에 출력하자.
 
             cv2.imshow('original', frame2)
             # cv2.imshow('Blue', res1)
