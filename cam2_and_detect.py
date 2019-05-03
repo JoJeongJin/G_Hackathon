@@ -170,13 +170,14 @@ if __name__ == '__main__':
 
             person_detected_int = 0
             if 'person' in camera_detect_list:  # 이 부분에서 person이 detect되면 print 해준다.
-                print('Person detected')
+                # print('Person detected')
                 person_detected_int = 1
 
             cv2.imshow("frame", orig_im)
 
             #여기 부터 색깔 추출★★★★★★★★★★★★★★★★★★★★
             #★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+            #진영이 형님이 구현하신 부분
             frame2 = cv2.resize(frame2, (100, 100))
 
             hsv = cv2.cvtColor(frame2, cv2.COLOR_BGR2HSV)
@@ -201,20 +202,15 @@ if __name__ == '__main__':
             # blue_pixel_num = 0
             green_pixel_num = 0
             red_pixel_num = 0
-            thresh_hold = 100
+            thresh_hold = 200
 
+            #빨간,초록 불 픽셀 갯수 구해주는 부분
             res3_array = np.ravel(res3, order='C')
             for i in res3_array:
                 if i >= 1:
                     red_pixel_num=red_pixel_num+1
                 if red_pixel_num >= thresh_hold:
                     break
-
-            # print("빨간 픽셀의 갯수 => ")
-            # print(red_pixel_num)
-
-            if red_pixel_num >= thresh_hold:
-                print("빨간불이 켜졌습니다.")
 
             res2_array = np.ravel(res2, order='C')
             for i in res2_array:
@@ -223,17 +219,30 @@ if __name__ == '__main__':
                 if green_pixel_num >= thresh_hold:
                     break
 
+
+
+
+            # print("빨간 픽셀의 갯수 => ")
+            # print(red_pixel_num)
+
+            light_status = "green"
+
+            if red_pixel_num >= thresh_hold and red_pixel_num > green_pixel_num:
+                light_status = "red"
+                print("빨간불이 켜졌습니다.")
+
             # print("초록 픽셀의 갯수 => ")
             # print(green_pixel_num)
 
-            if green_pixel_num >= thresh_hold:
+            if green_pixel_num >= thresh_hold and green_pixel_num>red_pixel_num:
+                light_status = "green"
                 print("초록불이 켜졌습니다.")
 
             now = datetime.now()
             ##여기에 각종 연산을 통한 결과를 출력하자
 
             #case 1: 사람이 빨간불인데 건너려고 하는 경우 경고 소리를 내준다.
-            if person_detected_int == 1 and red_pixel_num == thresh_hold:
+            if person_detected_int == 1 and red_pixel_num == thresh_hold and light_status == "red":
                 music_file = "alert.mp3"
                 freq = 16000  # sampling rate, 44100(CD), 16000(Naver TTS), 24000(google TTS)
                 bitsize = -16  # signed 16 bit. support 8,-8,16,-16
@@ -248,8 +257,8 @@ if __name__ == '__main__':
 
             #case 2: 초록불이 켜졌을 때 밤인 경우 불을 켜줘야 한다.
             now_hour = now.hour
-            if green_pixel_num == thresh_hold and (now_hour >=17 or now_hour <=7):
-                print("초록불이 켜지고 밤이니까 불을 켜자")
+            if green_pixel_num == thresh_hold and (now_hour >=17 or now_hour <=7) and light_status == "green":
+                print("초록불이 켜지고 밤이니까 불이 켜집니다.")
             ##이 사이에 출력하자.
 
             cv2.imshow('original', frame2)
