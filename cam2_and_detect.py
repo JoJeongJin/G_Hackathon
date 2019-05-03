@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
             #여기 부터 색깔 추출★★★★★★★★★★★★★★★★★★★★
             #★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-            frame2 = cv2.resize(frame2, (400, 400))
+            frame2 = cv2.resize(frame2, (100, 100))
 
             hsv = cv2.cvtColor(frame2, cv2.COLOR_BGR2HSV)
 
@@ -185,8 +185,40 @@ if __name__ == '__main__':
             res2 = cv2.bitwise_and(frame2, frame2, mask=mask_green)
             res3 = cv2.bitwise_and(frame2, frame2, mask=mask_red)
 
+            # blue_pixel_num = 0
+            green_pixel_num = 0
+            red_pixel_num = 0
+
+            thresh_hold = 100
+
+            res3_array = np.ravel(res3, order='C')
+            for i in res3_array:
+                if i>=1:
+                    red_pixel_num=red_pixel_num+1
+                if red_pixel_num >=thresh_hold:
+                    break
+
+            print("빨간 픽셀의 갯수 => ")
+            print(red_pixel_num)
+
+            if red_pixel_num >= thresh_hold:
+                print("빨간불이 켜졌습니다.")
+
+            res2_array = np.ravel(res2, order='C')
+            for i in res2_array:
+                if i >= 1:
+                    green_pixel_num = green_pixel_num + 1
+                if green_pixel_num >= thresh_hold:
+                    break
+
+            print("초록 픽셀의 갯수 => ")
+            print(green_pixel_num)
+
+            if green_pixel_num >= thresh_hold:
+                print("초록불이 켜졌습니다.")
+
             cv2.imshow('original', frame2)
-            cv2.imshow('Blue', res1)
+            # cv2.imshow('Blue', res1)
             cv2.imshow('Green', res2)
             cv2.imshow('Red', res3)
 
